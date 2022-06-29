@@ -146,6 +146,7 @@ body{
   object-fit: cover;
   border-radius: 12px;
   height: 250px;
+  object-position: top center;
 }
 
 /* title section */

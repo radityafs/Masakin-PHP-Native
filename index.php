@@ -1,19 +1,31 @@
+<?php
+/*
+    File digunakan untuk menampilkan halaman Landing Page / Halaman Utama
+*/
+?>
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="./assets/images/Logo.png" />
+    <link rel="stylesheet" href="./assets/styles/navbar.css">
     <link rel="stylesheet" href="./assets/styles/landing.css">
+    <link rel="stylesheet" href="./assets/styles/utility.css">
+    <link rel="stylesheet" href="./assets/styles/footer.css">
     <link rel="stylesheet" href="./assets/styles/utility.css">
     <link rel="stylesheet" href="./assets/styles/bootstrap.min.css">
     <script src="./assets/js/bootstrap.bundle.min.js"></script>
     <title>Resepku</title>
 </head>
 
+
 <body>
 
     <?php
-    require_once("./components/navbar.php")
+    require_once("./components/navbar.php");
+    require_once './handler/DatabaseHandler.php';
+    $db = new DatabaseHandler();
     ?>
 
     <div className="container-fluid" style="position: relative;">
@@ -24,7 +36,7 @@
                     <label class="py-2 px-4" htmlFor="search">
                         <img src="./assets/icons/search.svg" style="width: 25px; height:25px;"></i>
                     </label>
-                    <input type="search" class="form-control p-3" id="search">
+                    <input type="search" name="search" class="form-control p-3" id="search" placeholder="Search food you want to ...">
                 </form>
             </div>
             <div class="decoration col-2 col-sm-3 d-flex align-items-center back-primary">
@@ -91,36 +103,25 @@
             </div>
             <div class="container">
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-                    <div class="col">
-                        <a href="detail.php?=1">
+
+                    <?php
+                    $query = $db->executeQuery("SELECT * FROM recipe ORDER BY recipeId DESC LIMIT 3");
+                    while ($row = $query->fetch_assoc()) {
+                        echo '
+                        <div class="col">
+                        <a href="detail.php?=' . $row['recipeId'] . '">
                             <div class="card align-items-center">
                                 <p class="title text-dark text-str back-primary px-2 py-1 rounded">
-                                    Healthy Bone Broth Ramen
+                                    ' . $row['title'] . '
                                 </p>
-                                <img src="./assets/images/landing-new.webp" class="card-img-top" alt=anu />
+                                <img src="./public/' . $row['photo'] . '" class="card-img-top" alt=anu />
                             </div>
                         </a>
-                    </div>
-                    <div class="col">
-                        <a href="detail.php?=1">
-                            <div class="card align-items-center">
-                                <p class="title text-dark text-str back-primary px-2 py-1 rounded">
-                                    Healthy Bone Broth Ramen
-                                </p>
-                                <img src="./assets/images/landing-new.webp" class="card-img-top" alt=anu />
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a href="detail.php?=1">
-                            <div class="card align-items-center">
-                                <p class="title text-dark text-str back-primary px-2 py-1 rounded">
-                                    Healthy Bone Broth Ramen
-                                </p>
-                                <img src="./assets/images/landing-new.webp" class="card-img-top" alt=anu />
-                            </div>
-                        </a>
-                    </div>
+                    </div>';
+                    }
+                    ?>
+
+
                 </div>
 
             </div>

@@ -1,3 +1,17 @@
+<?php
+
+/*
+    File digunakan untuk login page
+*/
+
+
+session_start();
+if (isset($_SESSION["user"])) {
+    header("Location: index.php");
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -35,25 +49,20 @@
                     <h2 class='fs-6 text-secondary text-center mb-4'>
                         Log in into your existing account
                     </h2>
-                    <form>
+                    <form action="./handler/Login.php" method="POST">
                         <div class='mb-3'>
-                            <label htmlFor='email' class='form-label' data-bs-toggle='tooltip' data-bs-placement='top' title='Required'>
-                                * E-mail
+                            <label htmlFor='email' class='form-label'>
+                                E-mail
                             </label>
-                            <input type='email' class='form-control form-control-sm p-3' id='email' required placeholder='E-mail' />
+                            <input type='email' class='form-control form-control-sm p-3' name='email' required placeholder='E-mail' />
                         </div>
                         <div class='mb-3'>
-                            <label htmlFor='email' class='form-label' data-bs-toggle='tooltip' data-bs-placement='top' title='Required'>
-                                * Password
+                            <label htmlFor='email' class='form-label'>
+                                Password
                             </label>
-                            <input type='password' class='form-control form-control-sm p-3' id='password' required placeholder='Password' />
+                            <input type='password' class='form-control form-control-sm p-3' name='password' required placeholder='Password' />
                         </div>
-                        <div class='mb-3 form-check'>
-                            <input type='checkbox' class='form-check-input' id='terms' />
-                            <label class='form-check-label' htmlFor='terms'>
-                                I agree to terms and conditions
-                            </label>
-                        </div>
+
 
                         <button type='submit' class='btn back-primary w-100 text-light mb-2'>
                             Log in

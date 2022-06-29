@@ -95,7 +95,7 @@ ul{
 textarea{
     display: block;
     border-radius: 6px;
-    margin: 100px auto 75px;
+    margin: 20px auto 75px;
     padding: 20px;
     height: 300px;
     width: 100%;
@@ -134,10 +134,14 @@ textarea:focus{
 
 /** Section comments **/
 
+.comment-section{
+    margin-bottom: 50px;
+}
+
 .comment{
     display: flex;
     flex-direction: row;
-    margin-bottom: 100px;
+    margin-bottom: 15px;
 }
 
 .comment-img{
@@ -207,6 +211,14 @@ footer p{
     font-weight: 400;
 }
 
+.content-img img{
+    height: 400px;
+    width: 600px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 25px;
+}
+
 /* media screen on mobile*/
 @media screen and (max-width: 600px){
 
@@ -251,7 +263,7 @@ footer p{
     }
 
     textarea{
-        margin: 50px auto 50px;
+        margin: 20px auto 50px;
         padding: 10px;
         height: 200px;
         width: 100%;
@@ -264,7 +276,7 @@ footer p{
     }
 
     .comment{
-        margin-bottom: 50px;
+        margin-bottom: 10px;
     }
 
     .footer{
@@ -279,5 +291,10 @@ footer p{
 
     .content ul li{
         padding: 5px;
+    }
+
+    .content-img img{
+        width: 400px;
+        height: 400px;
     }
 }

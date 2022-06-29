@@ -1,3 +1,10 @@
+<?php
+/*
+    File digunakan untuk menampilkan Detail Resep Masakan 
+    dan menampilkan komentar
+*/
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,6 +15,9 @@
   <link rel="icon" href="./assets/images/Logo.png" />
 
   <title>Detail Recipe</title>
+  <link rel="stylesheet" href="./assets/styles/navbar.css">
+  <link rel="stylesheet" href="./assets/styles/footer.css">
+  <link rel="stylesheet" href="./assets/styles/utility.css">
 
   <link rel="stylesheet" href="./assets/styles/bootstrap.min.css">
   <script src="./assets/js/bootstrap.bundle.min.js"></script>
@@ -16,21 +26,33 @@
 </head>
 
 <body>
-  <nav>
-    <div class="header">
-      <ul>
-        <li><a class="active" href="/">Home</a></li>
-        <li><a href="/Add.php">Add Recipe</a></li>
-        <li><a href="/Profile.php">Profile</a></li>
-      </ul>
-    </div>
-  </nav>
+  <?php
+  require_once("./components/navbar.php");
+  require_once("./handler/DatabaseHandler.php");
 
-  <section>
+  $db = new DatabaseHandler();
+
+  if (isset($_GET["id"])) {
+    $id = intval($_GET["id"]);
+    $query = $db->executeQuery("SELECT * FROM recipe WHERE recipeId = " . $_GET["id"]);
+    $recipe = $query->fetch_assoc();
+
+    if ($recipe == null) {
+      header("Location: List.php");
+      exit();
+    }
+  } else {
+    header("Location: List.php");
+    exit();
+  }
+
+  ?>
+
+  <section style="padding-top: 70px;">
     <div class="container">
-      <h1 class="title">Loream Sandwich</h1>
+      <h1 class="title"><?= $recipe["title"] ?></h1>
       <div class="content-img">
-        <img src="./assets/images/food-image.png" alt="Food Image" />
+        <img src="./public/<?= $recipe["photo"] ?>" alt="Food Image" />
       </div>
     </div>
   </section>
@@ -40,73 +62,63 @@
       <div class="ingridients">
         <h2>Ingriedients</h2>
         <ul>
-          <li>- 2 eggs</li>
-          <li>- 2 tbsp mayonnaise</li>
-          <li>- 3 slices bread</li>
-          <li>- a little butter</li>
-          <li>- ⅓ carton of cress</li>
-          <li>
-            - 2-3 slices of tomato or a lettuce leaf and a slice of ham or
-            cheese
-          </li>
-          <li>- crisps , to serve</li>
+          <?php
+          $ingridients = explode("\n", $recipe["ingredients"]);
+          foreach ($ingridients as $ingridient) {
+            echo "<li>" . $ingridient . "</li>";
+          }
+          ?>
         </ul>
       </div>
     </div>
   </section>
 
-  <section>
+  <?php
+
+  if (isset($_SESSION['users']['id'])) {
+    echo '<section>
     <div class="container">
-      <h2>Video Step</h2>
-
-      <a class="card" href="/#">
-        <img src="./assets/icons/button-image.svg" alt="Video Image" width="1082px" height="700px" />
-      </a>
-
-      <a class="card" href="/#">
-        <img src="./assets/icons/button-image.svg" alt="Video Image" width="1082px" height="700px" />
-      </a>
-    </div>
-  </section>
-
-  <section>
-    <div class="container">
-      <form action="/#">
-        <textarea placeholder="Comment :" name="comment"></textarea>
-        <button type="submit" style="color: white">Send</button>
-      </form>
-    </div>
-  </section>
-
-  <section>
-    <div class="container">
-      <h2>Author</h2>
-      <div class="comment">
-        <div class="comment-img">
-          <img src="./assets/images/comment-image.png" alt="Comment Image" />
-        </div>
-
-        <div class="comment-text">
-          <a>Raditya Firman Syaputra</a>
-          <p>Good Code, Good Recipe</p>
-        </div>
+      <div class="review" style="margin-bottom:10px;">
+        <h2>Review</h2>
+        <form action="./handler/AddReview.php?id=' . $id . '" method="post">
+          <textarea name="comment" id="" cols="30" rows="10" placeholder="Write your review here"></textarea>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
       </div>
+      </div>
+      </section>';
+  }
+
+  ?>
+
+
+  <section>
+    <div class="container comment-section">
+      <h2>Reviews</h2>
+      <?php
+
+      $commentRecipe = $db->executeQuery("SELECT users.photo AS photo, users.name AS name, reviews.* FROM reviews LEFT JOIN users ON reviews.userId = users.userId WHERE recipeId =" . $_GET["id"]);
+
+      while ($row = $commentRecipe->fetch_assoc()) {
+        echo '
+          <div class="comment">
+          <div class="comment-img">
+            <img src="./public/' . $row["photo"] . '" alt="Comment Image" />
+          </div>
+  
+          <div class="comment-text">
+            <a>' . $row["name"] . '</a>
+            <p>' . $row["review"] . '</p>
+          </div>
+        </div>';
+      }
+      ?>
+
+
     </div>
   </section>
 
-  <footer>
-    <h1>Eat, Cook,Repeat</h1>
-    <p>Share your best recipe by uploading here !</p>
-
-    <div class="content">
-      <ul>
-        <li>Product</li>
-        <li>Company</li>
-        <li>Learn More</li>
-        <li>Get In Touch</li>
-      </ul>
-    </div>
-  </footer>
+  <?php require_once("./components/footer.php"); ?>
 </body>
 
 </html>

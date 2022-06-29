@@ -1,3 +1,9 @@
+<?php
+/*
+    File digunakan untuk Menambahkan dan Edit Resep Masakan
+*/
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,7 +14,9 @@
     <link rel="icon" href="./assets/images/Logo.png" />
 
     <title>Add Recipe</title>
-
+    <link rel="stylesheet" href="./assets/styles/navbar.css">
+    <link rel="stylesheet" href="./assets/styles/footer.css">
+    <link rel="stylesheet" href="./assets/styles/utility.css">
     <link rel="stylesheet" href="./assets/styles/utility.css">
     <link rel="stylesheet" href="./assets/styles/add.css">
     <link rel="stylesheet" href="./assets/styles/bootstrap.min.css">
@@ -18,36 +26,50 @@
 <body>
 
     <?php
-    require_once("./components/navbar.php")
+    require_once("./components/navbar.php");
+    if (isset($_SESSION['users']) == false) {
+        header("Location: login.php");
+    }
+
+    if (isset($_GET['id'])) {
+        $id = intval($_GET['id']);
+        require_once("./handler/DatabaseHandler.php");
+        $db = new DatabaseHandler();
+        $recipe = $db->executeQuery("SELECT * FROM recipe WHERE recipeId = $id AND authorId = " . $_SESSION['users']['id']);
+
+        $recipe = $recipe->fetch_assoc();
+        if ($recipe == null) {
+            header("Location: List.php");
+        }
+    }
 
     ?>
+
     <div class="container mb-5">
         <section class="add ff-airbnb">
-            <form>
-                <div class="mb-3">
-                    <label htmlFor="title" class="form-label me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Required">
-                        * Title
-                    </label>
-                    <input type="text" class="form-control form-control-sm p-3" id="title" placeholder="Title" required />
-                </div>
-                <div class="mb-3">
-                    <label htmlFor="ingredients" class="form-label me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Required">
-                        * Ingredients
-                    </label>
-                    <textarea class="form-control" id="ingredients" rows="10" placeholder="Ingredients"></textarea>
-                </div>
+            <form action="./handler/AddRecipe.php<?= isset($_GET['id']) ? "?id=$id" : "" ?>" method="POST" enctype="multipart/form-data">
+
                 <div class="mb-3">
                     <label htmlFor="photo" class="form-label me-2">
                         Photo
                     </label>
-                    <input type="file" class="form-control form-control-sm p-3" id="photo" placeholder="Photo" />
+                    <input type="file" class="form-control form-control-sm p-3" name="photo" placeholder="Photo" required />
+                </div>
+
+                <div class="mb-3">
+                    <label htmlFor="title" class="form-label me-2">
+                        Title
+                    </label>
+                    <input type="text" class="form-control form-control-sm p-3" name="title" placeholder="Title" value="<?= isset($recipe["title"]) ? $recipe["title"] : ""  ?>" required />
                 </div>
                 <div class="mb-3">
-                    <label htmlFor="video" class="form-label me-2">
-                        Video
+                    <label class="form-label me-2" title="Required">
+                        Ingredients
                     </label>
-                    <input type="file" class="form-control form-control-sm p-3" id="video" placeholder="Video" />
+                    <textarea class="form-control" name="ingredients" rows="10" placeholder="Ingredients" required><?= isset($recipe["ingredients"]) ? $recipe["ingredients"] : "" ?></textarea>
                 </div>
+
+
                 <div class="d-flex justify-content-center">
 
                     <button type="submit" class="btn back-primary w-100 text-light mb-2">
@@ -59,9 +81,7 @@
     </div>
 
     <?php
-
-    require_once("./components/footer.php")
-
+    require_once("./components/footer.php");
     ?>
 
 </body>

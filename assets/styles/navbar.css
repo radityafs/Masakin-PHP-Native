@@ -1,31 +1,40 @@
-/* navbar component */
-.navbar {
-  margin-top: -5px;
-  transition: 0.5s;
+.navbar-nav .dropdown-menu{
+  background-color: #F5F5F5;
 }
 
-.navbar .nav-link {
-  font-weight: 500;
-  color: #2E266F !important;
+.nav-wrapper{
+  position: fixed;
+  z-index: 9999;
+  width: 100vw;
+  height: 70px;
+  padding: 0 20px 0 20px;
+  background-color: #fff;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
-.navbar .active {
-  padding-right: 5px;
-  border-bottom: 2px solid #2E266F;
+
+ul.navbar-nav li{
+  margin-bottom: 20px;
 }
 
-.navbar .right-menu .icon {
+.nav-wrapper ul li{
+  display: inline-block;
+  margin-right: 75px;
+}
+
+.navbar-nav li .btn-nav{
+  position: absolute;
+  background-color: #EFC81A !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
+  color: #fff !important;
+  top: 15px;
+  width: 100px;
   height: 40px;
-}
-
-.navbar .right-menu a {
-  text-decoration: none;
-}
-
-.nav-shadow {
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.19), 0 3px 3px rgba(0, 0, 0, 0.23);
+  border-radius: 5px;
 }

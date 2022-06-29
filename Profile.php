@@ -1,3 +1,11 @@
+<?php
+
+/*
+    File digunakan untuk menampilkan detail resep user
+    dan untuk akses ke halaman edit dan hapus resep
+*/
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,28 +16,30 @@
   <link rel="icon" href="./assets/images/Logo.png" />
   <title>Profile</title>
   <link rel="icon" href="./assets/images/Logo.png" />
-
+  <link rel="stylesheet" href="./assets/styles/navbar.css">
+  <link rel="stylesheet" href="./assets/styles/footer.css">
+  <link rel="stylesheet" href="./assets/styles/utility.css">
   <link rel="stylesheet" href="./assets/styles/bootstrap.min.css">
   <script src="./assets/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="./assets/styles/profile.css" />
 </head>
 
 <body>
-  <nav>
-    <div class="header">
-      <ul>
-        <li><a class="active" href="index.php">Home</a></li>
-        <li><a href="Add.php">Add Recipe</a></li>
-        <li><a href="Profile.php">Profile</a></li>
-      </ul>
-    </div>
-  </nav>
+  <?php
+  require_once("./components/navbar.php");
 
-  <section>
+
+  if (isset($_SESSION["users"]) == false) {
+    header("Location: login.php");
+  }
+
+  ?>
+
+  <section style="padding-top: 70px;">
     <div class="container">
       <div class="profil-desc">
-        <img src="./assets/images/profile-image.png" alt="Food Image" />
-        <h2>Garneta Sharina</h2>
+        <img <?= "src='./public/" . $_SESSION["users"]["photo"] . "'" ?> alt="Food Image" />
+        <h2><?= $_SESSION["users"]["name"] ?></h2>
       </div>
     </div>
   </section>
@@ -39,8 +49,6 @@
       <div class="list-action">
         <ul>
           <li><a class="active" href="profile.php">My Recipe</a></li>
-          <li><a href="profile.php">Saved Recipe</a></li>
-          <li><a href="profile.php">Liked Recipe</a></li>
         </ul>
       </div>
       <hr />
@@ -50,36 +58,34 @@
   <div class="section">
     <div class="container">
       <div class="row list-recipe">
-        <div class="col-md-3">
-          <a class="card" href="detail.php?=1">
-            <img src="./assets/images/food-image2.png" alt="Food Image" />
-            <p class="carousel-caption">Bomb Chicken</p>
-          </a>
-        </div>
-        <div class="col-md-3">
-          <a class="card" href="detail.php?=1">
-            <img src="./assets/images/food-image3.png" alt="Food Image" />
-            <p class="carousel-caption">Loream Sandwich</p>
-          </a>
-        </div>
-        <div class="col-md-3">
-          <a class="card" href="detail.php?=1">
-            <img src="./assets/images/food-image3.png" alt="Food Image" />
-            <p class="carousel-caption">Loream Sandwich</p>
-          </a>
-        </div>
-        <div class="col-md-3">
-          <a class="card" href="detail.php?=1">
-            <img src="./assets/images/food-image3.png" alt="Food Image" />
-            <p class="carousel-caption">Loream Sandwich</p>
-          </a>
-        </div>
-        <div class="col-md-3">
-          <a class="card" href="detail.php?=1">
-            <img src="./assets/images/food-image3.png" alt="Food Image" />
-            <p class="carousel-caption">Loream Sandwich</p>
-          </a>
-        </div>
+
+        <?php
+        require_once("./handler/DatabaseHandler.php");
+
+        $db = new DatabaseHandler();
+        $users_id = $_SESSION["users"]["id"];
+
+        $query = $db->executeQuery("SELECT * FROM recipe WHERE authorId = $users_id");
+        if ($query->num_rows > 0) {
+          while ($row = $query->fetch_assoc()) {
+            echo '
+            <div class="col-md-3" style="position: relative;">
+            <a class="card" href="Detail.php?id=' . $row['recipeId'] . '">
+              <img class="image-card" src="./public/' . $row['photo'] . '" alt="' . $row['title'] . '" />
+              <p class="carousel-caption" style="top: 0;">' . $row['title'] . '</p>
+
+              <a href="Add.php?id=' . $row['recipeId'] . '" class="btn btn-warning" style="position: absolute; bottom:30px; margin-left:30px;">Edit</a>
+              <a href="./handler/DeleteRecipe.php?id=' . $row["recipeId"] . '" class="btn btn-danger" style="position: absolute; bottom:30px; right:0; margin-right:30px;">Delete</a>
+            </a>
+          </div>
+            ';
+          }
+        } else {
+          echo "No recipe found";
+        }
+
+        ?>
+
       </div>
     </div>
   </div>

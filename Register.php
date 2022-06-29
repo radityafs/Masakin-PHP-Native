@@ -1,3 +1,16 @@
+<?php
+
+/*
+    File ini digunakan untuk halaman registrasi user
+*/
+
+session_start();
+
+if (isset($_SESSION["user"])) {
+    header("Location: index.php");
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,8 +24,8 @@
     <link rel="stylesheet" href="./assets/styles/auth.css">
     <link rel="stylesheet" href="./assets/styles/utility.css">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./assets/styles/bootstrap.min.css">
+    <script src="./assets/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
@@ -33,39 +46,33 @@
                     <h2 class="fs-6 text-secondary text-center mb-4">
                         Create new account to access all features
                     </h2>
-                    <form>
-                        <div class="mb-3">
-                            <label htmlFor="name" class="form-label" data-bs-toggle="tooltip" data-bs-placement="top" title="Required">
-                                * Name
+                    <form action="./handler/Register.php" method="POST" enctype="multipart/form-data">
+                        <div class=" mb-3">
+                            <label class="form-label">
+                                Name
                             </label>
-                            <input type="text" class="form-control form-control-sm p-3" id="name" placeholder="Name" required />
+                            <input type="text" class="form-control form-control-sm p-3" name="name" placeholder="Name" required />
                         </div>
                         <div class="mb-3">
-                            <label htmlFor="email" class="form-label" data-bs-toggle="tooltip" data-bs-placement="top" title="Required">
-                                * E-mail
+                            <label class="form-label">
+                                E-mail
                             </label>
-                            <input type="email" class="form-control form-control-sm p-3" id="email" required placeholder="E-mail" />
-                        </div>
-                        <div class="mb-3">
-                            <label htmlFor="phone" class="form-label" data-bs-toggle="tooltip" data-bs-placement="top" title="Required">
-                                * Phone Number
-                            </label>
-                            <input type="number" class="form-control form-control-sm p-3" id="phone" required placeholder="08XXXXXXXXXX" />
+                            <input type="email" class="form-control form-control-sm p-3" name="email" required placeholder="E-mail" />
                         </div>
                         <div class="mb-3">
                             <label htmlFor="photo" class="form-label">
                                 Photo
                             </label>
-                            <input type="file" class="form-control form-control-sm p-3" id="photo" placeholder="Photo" />
+                            <input type="file" class="form-control form-control-sm p-3" name="photo" placeholder="Photo" />
                         </div>
                         <div class="mb-3">
-                            <label htmlFor="email" class="form-label" data-bs-toggle="tooltip" data-bs-placement="top" title="Required">
-                                * Password
+                            <label htmlFor="email" class="form-label">
+                                Password
                             </label>
-                            <input type="password" class="form-control form-control-sm p-3" id="password" required placeholder="Password" />
+                            <input type="password" class="form-control form-control-sm p-3" name="password" required placeholder="Password" />
                         </div>
                         <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="terms" />
+                            <input type="checkbox" class="form-check-input" />
                             <label class="form-check-label" htmlFor="terms">
                                 I agree to terms and conditions
                             </label>
@@ -77,9 +84,9 @@
                     </form>
                     <p class="text-center text-secondary mt-4 ff-airbnb">
                         Already have account?
-                        <Link class="color-primary text-decoration-none" to="/auth">
-                        Log in Here
-                        </Link>
+                        <a class="color-primary text-decoration-none" href="Login.php">
+                            Log in Here
+                        </a>
                     </p>
                     <br />
                 </div>
