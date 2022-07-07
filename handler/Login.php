@@ -4,7 +4,6 @@
     File ini digunakan untuk menangani login user / authentikasi
 */
 
-
 require_once 'DatabaseHandler.php';
 
 if (isset($_POST)) {
@@ -20,8 +19,14 @@ if (isset($_POST)) {
                 'name' => $users['name'],
                 'email' => $users['email'],
                 'photo' => $users['photo'],
+                'role' => $users['role']
             ];
-            header('Location: ../index.php');
+
+            if ($users['role'] == "1") {
+                header("Location: ../admin/index.php");
+            } else {
+                header("Location: ../index.php");
+            }
         } else {
             session_start();
             $_SESSION['errorMsg'] = 'Invalid email or password';

@@ -2,6 +2,8 @@
 /*
     File digunakan untuk Menambahkan dan Edit Resep Masakan
 */
+require_once("./handler/DatabaseHandler.php");
+$db = new DatabaseHandler();
 ?>
 
 <!DOCTYPE html>
@@ -33,8 +35,6 @@
 
     if (isset($_GET['id'])) {
         $id = intval($_GET['id']);
-        require_once("./handler/DatabaseHandler.php");
-        $db = new DatabaseHandler();
         $recipe = $db->executeQuery("SELECT * FROM recipe WHERE recipeId = $id AND authorId = " . $_SESSION['users']['id']);
 
         $recipe = $recipe->fetch_assoc();
@@ -53,7 +53,7 @@
                     <label htmlFor="photo" class="form-label me-2">
                         Photo
                     </label>
-                    <input type="file" class="form-control form-control-sm p-3" name="photo" placeholder="Photo" required />
+                    <input type="file" class="form-control form-control-sm p-3" name="photo" placeholder="Photo" />
                 </div>
 
                 <div class="mb-3">
@@ -62,6 +62,35 @@
                     </label>
                     <input type="text" class="form-control form-control-sm p-3" name="title" placeholder="Title" value="<?= isset($recipe["title"]) ? $recipe["title"] : ""  ?>" required />
                 </div>
+                <div class="mb-3">
+                    <label htmlFor="title" class="form-label me-2">
+                        Kategori
+                    </label>
+
+                    <select name="kategori" style="width: 100%;" class="form-control form-control-sm p-3">
+
+                        <?php
+                        if (isset($_GET['id'])) {
+                            $kategoriSelected = $recipe["categoryId"];
+                        } else {
+                            $kategoriSelected = "";
+                        }
+
+                        $query = $db->executeQuery("SELECT * FROM category");
+                        if ($kategoriSelected == "") {
+                            echo "<option value='' selected disabled>Pilih Kategori</option>";
+                        }
+                        while ($row = $query->fetch_assoc()) {
+                            if ($row["idCategory"] == $kategoriSelected) {
+                                echo "<option value='" . $row["idCategory"] . "' selected>" . $row["name"] . "</option>";
+                            } else {
+                                echo "<option value='" . $row["idCategory"] . "'>" . $row["name"] . "</option>";
+                            }
+                        }
+                        ?>
+                    </select>
+                </div>
+
                 <div class="mb-3">
                     <label class="form-label me-2" title="Required">
                         Ingredients

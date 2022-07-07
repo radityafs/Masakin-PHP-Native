@@ -65,7 +65,7 @@
         $db = new DatabaseHandler();
         $users_id = $_SESSION["users"]["id"];
 
-        $query = $db->executeQuery("SELECT * FROM recipe WHERE authorId = $users_id");
+        $query = $db->executeQuery("SELECT * FROM recipe WHERE authorId = $users_id AND isActive = 1");
         if ($query->num_rows > 0) {
           while ($row = $query->fetch_assoc()) {
             echo '

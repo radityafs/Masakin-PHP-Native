@@ -34,8 +34,9 @@
 
   if (isset($_GET["id"])) {
     $id = intval($_GET["id"]);
-    $query = $db->executeQuery("SELECT * FROM recipe WHERE recipeId = " . $_GET["id"]);
+    $query = $db->executeQuery("SELECT recipe.*, category.name AS category FROM recipe LEFT JOIN category ON recipe.categoryId = category.idCategory WHERE recipeId = " . $_GET["id"]);
     $recipe = $query->fetch_assoc();
+
 
     if ($recipe == null) {
       header("Location: List.php");
@@ -50,7 +51,8 @@
 
   <section style="padding-top: 70px;">
     <div class="container">
-      <h1 class="title"><?= $recipe["title"] ?></h1>
+      <h1 class="title mb-2"><?= $recipe["title"] ?></h1>
+      <h5 class="title" style="font-size:28px;"><?= $recipe["category"] ?></h5>
       <div class="content-img">
         <img src="./public/<?= $recipe["photo"] ?>" alt="Food Image" />
       </div>
@@ -97,7 +99,9 @@
       <h2>Reviews</h2>
       <?php
 
-      $commentRecipe = $db->executeQuery("SELECT users.photo AS photo, users.name AS name, reviews.* FROM reviews LEFT JOIN users ON reviews.userId = users.userId WHERE recipeId =" . $_GET["id"]);
+      $commentRecipe = $db->executeQuery("SELECT users.photo AS photo, users.name AS name, reviews.*
+      FROM reviews LEFT JOIN users ON reviews.userId = users.userId 
+      WHERE recipeId =" . $_GET["id"]);
 
       while ($row = $commentRecipe->fetch_assoc()) {
         echo '

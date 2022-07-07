@@ -1,0 +1,7 @@
+List Anggota Kelompok
+
+NIM		    NAMA
+V3421069	Nadia Hatta Mokora
+V3421073 	Nurul Ngaeni
+V3421074	Raditya Firman Syaputra
+V3421088	Syahwan Eksa Jayadi

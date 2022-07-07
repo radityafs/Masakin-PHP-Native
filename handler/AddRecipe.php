@@ -12,6 +12,8 @@ if (isset($_POST)) {
 
     session_start();
 
+
+
     $newRecipe = [];
 
     foreach ($_FILES as $key => $value) {
@@ -57,7 +59,12 @@ if (isset($_POST)) {
     if (isset($_GET["id"])) {
         $id = intval($_GET["id"]);
 
-        $query = $db->executeQuery("UPDATE recipe SET title = '" . $_POST["title"] . "', ingredients = '" . $_POST["ingredients"] . "', photo = '" . $newRecipe["photo"] . "' WHERE recipeId = $id");
+        if (isset($_FILES["photo"]) && $_FILES["photo"]["name"]  != "") {
+            $query = $db->executeQuery("UPDATE recipe SET title = '" . $_POST["title"] . "', ingredients = '" . $_POST["ingredients"] . "', photo = '" . $newRecipe["photo"] . "' WHERE recipeId = $id");
+        } else {
+            $query = $db->executeQuery("UPDATE recipe SET title = '" . $_POST["title"] . "', ingredients = '" . $_POST["ingredients"] . "' WHERE recipeId = $id");
+        }
+
 
         if ($query) {
             header("Location: ../Profile.php");
@@ -66,7 +73,8 @@ if (isset($_POST)) {
             header("Location: ../Profile.php");
         }
     } else {
-        $query = $db->executeQuery("INSERT INTO recipe(authorId,title,ingredients,photo) VALUES ('" . $_SESSION["users"]["id"] . "', '" . $_POST["title"] . "', '" . $_POST["ingredients"] . "', '" . $newRecipe["photo"] . "')");
+
+        $query = $db->executeQuery("INSERT INTO recipe(authorId,title,ingredients,photo,categoryId) VALUES ('" . $_SESSION["users"]["id"] . "', '" . $_POST["title"] . "', '" . $_POST["ingredients"] . "', '" . $newRecipe["photo"] . "', " . intval($_POST["kategori"]) . ")");
         if ($query) {
             header("Location: ../Profile.php");
         } else {

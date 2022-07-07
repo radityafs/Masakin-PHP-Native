@@ -25,6 +25,7 @@
     <?php
     require_once("./components/navbar.php");
     require_once './handler/DatabaseHandler.php';
+
     $db = new DatabaseHandler();
     ?>
 
@@ -44,25 +45,30 @@
             </div>
         </section>
 
-
+        <?php
+        $topComment = $db->executeQuery("SELECT recipe.*,COUNT(reviews.review) AS jumlahKomen FROM recipe LEFT JOIN reviews ON recipe.recipeId = reviews.recipeId GROUP BY recipe.recipeId ORDER BY jumlahKomen DESC LIMIT 1;");
+        $resultTop = $topComment->fetch_assoc();
+        ?>
         <section class="suggestion ff-airbnb mb-10">
             <div class="title-section mb-4 mb-md-5">
                 <h1>Popular For You!</h1>
             </div>
             <div class="row">
                 <div class="left col-12 col-md-6">
-                    <img src="./assets/images/landing-suggestion.webp" alt="Suggestion" />
+                    <img src="./public/<?= $resultTop["photo"] ?>" alt="Suggestion" />
                     <div></div>
                 </div>
                 <div class="right col-12 col-md-6">
                     <div>
-                        <h1>Healthy Bone Broth Ramen (Quick & Easy)</h1>
+                        <h1><?= $resultTop["title"] ?></h1>
                         <hr />
                         <p>
-                            Quick + Easy Chicken Bone Broth Ramen- Healthy chicken ramen in a
-                            hurry? That’s right!
+                            <?php
+                            $resultTop["ingredients"] = substr($resultTop["ingredients"], 0, 100);
+                            echo $resultTop["ingredients"] . "...";
+                            ?>
                         </p>
-                        <a to="/" class="btn back-primary text-light" style="width: 150px;">
+                        <a href="./Detail.php?id=<?= $resultTop["recipeId"] ?>" class="btn back-primary text-light" style="width: 150px;">
                             Learn More
                         </a>
                     </div>
@@ -71,24 +77,32 @@
 
         </section>
 
+        <?php
+        $NewwesQuery = $db->executeQuery("SELECT * FROM recipe WHERE isActive = 1 ORDER BY recipeId DESC LIMIT 1");
+        $newwestResult = $NewwesQuery->fetch_assoc();
+
+        ?>
+
         <section class="new ff-airbnb mb-10">
             <div class="title-section mb-4 mb-md-5">
                 <h1>New Recipe</h1>
             </div>
             <div class="row">
                 <div class="left col-12 col-md-6">
-                    <img src="./assets/images/landing-new.webp" alt="New Recipe" />
+                    <img src="./public/<?= $newwestResult["photo"] ?>" alt="New Recipe" />
                     <div></div>
                 </div>
                 <div class="right col-12 col-md-6">
                     <div>
-                        <h1>Healthy Bone Broth Ramen (Quick & Easy)</h1>
+                        <h1><?= $newwestResult["title"] ?></h1>
                         <hr />
                         <p>
-                            Quick + Easy Chicken Bone Broth Ramen- Healthy chicken ramen in a
-                            hurry? That’s right!
+                            <?php
+                            $newwestResult["ingredients"] = substr($newwestResult["ingredients"], 0, 100);
+                            echo $newwestResult["ingredients"] . "...";
+                            ?>
                         </p>
-                        <a to="/" class="btn back-primary text-light" style="width: 150px;">
+                        <a href="./Detail.php?id=<?= $newwestResult["recipeId"] ?>" class="btn back-primary text-light" style="width: 150px;">
                             Learn More
                         </a>
                     </div>
@@ -105,11 +119,11 @@
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
 
                     <?php
-                    $query = $db->executeQuery("SELECT * FROM recipe ORDER BY recipeId DESC LIMIT 3");
+                    $query = $db->executeQuery("SELECT * FROM recipe WHERE isActive = 1 ORDER BY recipeId DESC LIMIT 3");
                     while ($row = $query->fetch_assoc()) {
                         echo '
                         <div class="col">
-                        <a href="detail.php?=' . $row['recipeId'] . '">
+                        <a href="./Detail.php?id=' . $row['recipeId'] . '">
                             <div class="card align-items-center">
                                 <p class="title text-dark text-str back-primary px-2 py-1 rounded">
                                     ' . $row['title'] . '

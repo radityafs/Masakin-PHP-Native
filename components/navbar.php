@@ -18,6 +18,20 @@ session_start();
     </button>
     <div class='collapse navbar-collapse' id='navbarNav'>
       <ul class='navbar-nav ms-auto text-lg gap-lg-0 gap-2'>
+
+        <?php
+        if (isset($_SESSION["users"]["role"]) && $_SESSION["users"]["role"] == 1) {
+          echo "<li class='nav-item my-auto me-lg-20'>
+          <a class='nav-link' href='./admin'>
+            Admin Dashboard
+          </a>
+        </li>
+      ";
+        }
+
+        ?>
+
+
         <li class='nav-item my-auto me-lg-20'>
           <a class='nav-link' href='./List.php'>
             Find Recipe
@@ -28,6 +42,8 @@ session_start();
             Add Recipe
           </a>
         </li>
+
+
 
         <?php
         if (isset($_SESSION["users"])) {
